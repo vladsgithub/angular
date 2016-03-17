@@ -1,10 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html ng-app="myApp">
 <head>
-	<meta charset="UTF-8">
-	<title>Title</title>
+	<title>Bulletin board</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="ui/css/style.css">
+	<script src="ui/js/lib/angular.min.js"></script>
 </head>
 <body>
+
+<div ng-controller="phoneController">
+	<p>Название: {{phone.name}}</p>
+	<p>Цена: {{phone.price}} $</p>
+	<p>Производитель: {{phone.company.name}}</p>
+</div>
+
+<script type="text/javascript">
+	angular.module('myApp', []); // creation of the myApp module
+</script>
+<script src="ui/js/controllers/phonesController.js"></script>
 
 </body>
 </html>

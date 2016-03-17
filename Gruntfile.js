@@ -3,16 +3,16 @@ module.exports = function(grunt) {
 		less: {
 			development: {
 				options: {
-					paths: ["./ui/less"],
+					paths: ["ui/less"],
 					yuicompress: true
 				},
 				files: {
-					"./ui/css/style.css": "./ui/less/main.less"
+					"ui/css/style.css": "ui/less/main.less"
 				}
 			}
 		},
 		watch: {
-			files: "./ui/less/*",
+			files: "ui/less/*",
 			tasks: ["less"]
 		}
 	});
