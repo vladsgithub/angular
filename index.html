@@ -5,19 +5,61 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="ui/css/style.css">
 	<script src="ui/js/lib/angular.min.js"></script>
+	<script src="ui/js/lib/angular-sanitize.min.js"></script>
+	<script src="ui/js/controllers/phonesController.js"></script>
 </head>
 <body>
+$rootScope.alert - {{alert}}
 
-<div ng-controller="phoneController">
-	<p>Название: {{phone.name}}</p>
-	<p>Цена: {{phone.price}} $</p>
-	<p>Производитель: {{phone.company.name}}</p>
+<div ng-controller="parentController">
+	<p>Сообщение: {{message}}</p>
+	<div ng-controller="phoneController">
+		<p>Название: {{phone.name}}</p>
+		<p>Цена: {{phone.price}} $</p>
+		<p>Производитель: {{phone.company.name}}</p>
+		<p>Сообщение: {{message}}</p>
+	</div>
+	<div ng-controller="phoneController as phoneCtrl">
+		<!-- Using 'as phoneCtrl' is necessary to get a value of 'phoneCtrl.text' -->
+		<input type="text" ng-model="phone.name" />
+		<p>Название: {{phone.name}}</p>
+		<p>Цена: {{phone.price}} $</p>
+		<p>Text: {{phoneCtrl.text}}</p>
+		<ul>
+			<li ng-repeat="item in items" ng-class="$odd ? 'odd' : 'even'">{{$index}}) item = {{item}}</li>
+			<!--$index: возвращает индекс элемента в массиве-->
+			<!--$first: возвращает true, если элемент является первым в массиве-->
+			<!--$last: возвращает true, если элемент является последним в массиве-->
+			<!--$middle: возвращает true, если элемент не является ни первым, ни последним в массиве-->
+			<!--$even: возвращает true, если элемент является четным-->
+			<!--$odd: возвращает true, если элемент является нечетным-->
+		</ul>
+	</div>
+	<div ng-controller="bindController">
+		<!--Привязка данных в AngularJS-->
+		<!--ng-bind: осуществляет одностороннюю привязку к свойству innerText html-элемента-->
+		<!--ng-model: создает двустороннюю привязку-->
+		<p>Количество элементов: <span ng-bind="phones.length"></span></p>
+		<input type="text" ng-model="phones[0].name" />
+		<p>Первый элемент: <span ng-bind="phones[0].name"></span></p>
+		<hr/>
+		<!--ng-bind-template: аналогична ng-bind за тем исключением, что позволяет установить привязку сразу к нскольким выражениям-->
+		<p ng-bind-template="{{phones[0].name}}: {{phones[0].price}} $"></p>
+		<hr/>
+		<!--ng-non-bindable: определяет участок html-кода, в котором привязка не будет использоваться-->
+		<p>{{1 + 2}}</p>
+		<p ng-non-bindable>{{1 + 2}}</p>
+		<hr/>
+		<!--ng-bind-html: осуществляет привязку к свойству innerHTML html-элемента.
+		НЕОБХОДИМ файл angular-sanitize.js !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		var myApp = angular.module('myApp', ['ngSanitize']); !!!!!!!!!!!!!!!!!!!!!!
+		При использовании этой директивы необходимо помнить, результатом вывода может быть потенциально
+		небезопасный код, например, содержащий javascript-->
+		<p>
+			<textarea ng-model="htmlcode"></textarea>
+		</p>
+		<p ng-bind-html="htmlcode"></p>
+	</div>
 </div>
-
-<script type="text/javascript">
-	angular.module('myApp', []); // creation of the myApp module
-</script>
-<script src="ui/js/controllers/phonesController.js"></script>
-
 </body>
 </html>
