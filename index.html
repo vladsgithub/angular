@@ -284,17 +284,31 @@ $rootScope.fromController = {{fromController}}
 
 	<div ng-controller="validationController">
 		<form name="answerForm">
-			<fieldset>
+			<!--Forms have the following states:-->
+			<!--$pristine No fields have been modified yet-->
+			<!--$dirty One or more have been modified-->
+			<!--$invalid The form content is not valid-->
+			<!--$valid The form content is valid-->
+			<!--$submitted The form is submitted-->
+			<h1>Валидное ли поле даты - {{answerForm.answerDate.$valid}}</h1>
+			<!--Input fields have the following states:-->
+			<!--$untouched The field has not been touched yet-->
+			<!--$touched The field has been touched-->
+			<!--$pristine The field has not been modified yet-->
+			<!--$dirty The field has been modified-->
+			<!--$invalid The field content is not valid-->
+			<!--$valid The field content is valid-->
+			<fieldset ng-style="$valid ? {} : {background: 'red'}">
 				<p>
 					<label>
 						Текст ответа
-						<input id="answerText" ng-model="answer.text" required placeholder="Введите ответ" />
+						<input ng-model="answer.text" required placeholder="Введите ответ" />
 					</label>
 				</p>
 				<p>
 					<label>
 						Автор ответа
-						<input id="answerAuthor" ng-model="answer.author" required placeholder="Введите автора" />
+						<input ng-model="answer.author" required placeholder="Введите автора" />
 					</label>
 				</p>
 				<p>
@@ -302,7 +316,7 @@ $rootScope.fromController = {{fromController}}
 						Дата ответа
 						<!--Директива ng-pattern принимает регулярное выражение, которому должен соответствовать -->
 						<!--вводимое значение. То есть в данном случае регулярное выражение соответствует, например, выражению 12/11/2013.-->
-						<input id="answerDate" ng-model="answer.date" required  ng-pattern="/\d\d/\d\d/\d\d\d\d/" placeholder="dd/mm/yyyy" />
+						<input name="answerDate" ng-model="answer.date" required  ng-pattern="/\d\d/\d\d/\d\d\d\d/" placeholder="dd/mm/yyyy" />
 					</label>
 				</p>
 			</fieldset>
