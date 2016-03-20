@@ -6,10 +6,14 @@
 	<link rel="stylesheet" href="ui/css/style.css">
 	<script src="ui/js/lib/angular.min.js"></script>
 	<script src="ui/js/lib/angular-sanitize.min.js"></script>
-	<script src="ui/js/controllers/phonesController.js"></script>
+	<script src="ui/js/app.js"></script>
+	<script src="ui/js/controllers.js"></script>
+	<script src="ui/js/filters.js"></script>
 </head>
 <body>
 $rootScope.alert - {{alert}}
+<br/>
+$rootScope.fromController = {{fromController}}
 
 <div ng-controller="parentController">
 	<p>Сообщение: {{message}}</p>
@@ -59,7 +63,263 @@ $rootScope.alert - {{alert}}
 			<textarea ng-model="htmlcode"></textarea>
 		</p>
 		<p ng-bind-html="htmlcode"></p>
+		<hr/>
+		<hr/>
+		<!--ng-include получает с веб-сервера фрагмент кода HTML, обрабатывает его и добавляет на html-страницу.-->
+		<!--Директива ng-include может принимать три параметра:-->
+		<!--src: url загружаемого файла-->
+		<!--onload: определяет выражение, которое рендерится при загрузке файла-->
+		<!--autoscroll: определяет, допускается ли прокрутка во время загрузки файла-->
+		<ng-include src="'phoneList.html'"></ng-include>
 	</div>
+
+	<div ng-controller="modeController">
+		<!--Динамическая загрузка представлений через ng-include-->
+		<div ng-repeat="button in modes">
+			<label>
+				<input type="radio" ng-model="data.mode" value="{{button.value}}" name="modes" />
+				{{button.label}}
+			</label>
+		</div>
+		<div ng-include="setFile()"></div>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="modeController">
+		<!--ng-switch  - иногда рациональнее будет определить фрагменты кода html сразу же на главной странице и -->
+		<!--отображать их в зависимости от условий-->
+		<div ng-repeat="button in modes">
+			<label>
+				<input type="radio" ng-model="data.mode" value="{{button.value}}" name="modes" />
+				{{button.label}}
+			</label>
+		</div>
+		<div ng-switch on="data.mode">
+			<div ng-switch-when="Tablets">
+				<ul>
+					<li ng-repeat="tablet in tablets">
+						<b>{{tablet.name}}</b>
+						<p>Цена: {{tablet.price}} $</p>
+						<p>Производитель: {{tablet.company}}</p>
+					</li>
+				</ul>
+			</div>
+			<div ng-switch-when="Phones">
+				<ul>
+					<li ng-repeat="phone in phones">
+						<b>{{phone.name}}</b>
+						<p>Цена: {{phone.price}} $</p>
+						<p>Производитель: {{phone.company}}</p>
+					</li>
+				</ul>
+			</div>
+			<div ng-switch-default>
+				Выберите товары для просмотра
+			</div>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="styleController">
+		<!--ng-class и ng-style-->
+		<!--Данные директивы служат стилизации элементов.-->
+		<div ng-style="somestyle">Директива ng-style</div>
+		<div ng-class="someclass">Директива ng-class</div>
+		<hr/>
+		<!--ng-show и ng-hide-->
+		<!--Директивы ngshow и nghide служат для отображения и скрытия элемента соответственно-->
+		<p ng-show="data.visible">Первый блок</p>
+		<p ng-hide="data.visible">Второй блок</p>
+		<input type="checkbox" ng-model="data.visible">Открыть/скрыть
+		<hr/>
+
+		<!--ng-if-->
+		<!--Действие ng-if во многом похоже на действие ng-show/ng-hide. Если ng-if принимает значение false,-->
+		<!--то элемент с директивой удаляется из структуры DOM, а при значении true, наоборот, добавляется-->
+		<input type="checkbox" ng-model="data.visible">Открыть/скрыть
+		<p ng-if="data.visible">Первый блок</p>
+		<p ng-if="!data.visible">Второй блок</p>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="questionController">
+		<!--ng-click-->
+		<!--Отдельная группа директив связана с обработкой пользовательских событий. Рассмотрим директиву ng-click,-->
+		<!--которая фактически будет эквивалентна обработке события onclick в javascript-->
+
+		<!--Кроме директивы ng-click, предназначенной для обработки кликов по элементам, имеется еще ряд директив:-->
+		<!--ng-blur: определяет поведение для события blur, которое возникает при потере элементом фокуса-->
+		<!--ng-focus: определяет поведение для события focus, которое возникает при получении фокуса элементом-->
+		<!--ng-change: определяет поведение для события change, которое возникает при изменении элементом состояния, -->
+		<!--например, при нажатии на элемент input type="checkbox"-->
+		<!--ng-submit: определяет поведение для события submit, которое возникает при отправке формы-->
+		<!--ng-copy/ng-cut/ng-paste: определяет поведение для событий копирования, вырезки и вставки соответственно-->
+		<!--ng-dblclick: та же ng-click, только обрабатывается двойное нажатие-->
+		<!--ng-mousedown: для обработки нажатия клавиши мыши-->
+		<!--ng-mouseup: для обработки отжатия мыши-->
+		<!--ng-mouseenter: для обработки наведения курсора в определенную область-->
+		<!--ng-mouseleave: для обработки ухода курсора с определенной области-->
+		<!--ng-mousemove: для обработки перемещения курсора мыши-->
+		<!--ng-keydown: обработка нажатия клавишы клавиатуры-->
+		<!--ng-keypress: обработка нажатия клавишы клавиатуры-->
+		<!--ng-keyup: обработка отжатия клавишы клавиатуры-->
+
+		<div class="quest" ng-class="questColorClass"
+			 ng-mouseenter="changeClass($event)"
+			 ng-mouseleave="changeClass($event)">
+			<h3>{{question.text}}</h3>
+			<p>{{question.author}} </p> <p><i>{{question.date}}</i></p>
+		</div>
+		<h3>Ответы</h3>
+		<div class="answers">
+			<div ng-repeat="answer in question.answers" class="answer">
+				<div class="vote">
+					<a class="vote-up" ng-click="voteUp(answer)"></a>
+					<span class="rate">{{answer.rate}}</span>
+					<a class="vote-down" ng-click="voteDown(answer)"></a>
+				</div>
+				<b>{{answer.text}}</b>
+				<p>{{answer.author}}</p>
+				<p><i>{{answer.date}}</i></p>
+			</div>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="questionController">
+		<!--Фильтры-->
+		<!--lowercase и uppercase, так мы можем приводить содержимое к нижнему и верхнему регистру соответственно. -->
+		<h3>{{question.text | uppercase}}</h3>
+		<!--number позволяет форматировать числа-->
+		<div>{{234.5677 | number: 1}}</div>
+		<div>{{235 | number: 1}}</div>
+		<!--currency - Для форматирования валюты-->
+		<div>{{234.5 | currency:'RUB '}}</div>
+		<!--date - Чтобы вывести дату в определенном формате-->
+		<div>{{1405405678756 | date:'yyyy-MM-dd'}}</div>
+		<hr/>
+		<!--Фильтры orderBy и limitTo-->
+		<!--orderBy упорядочивает набор объектов по определенному свойству-->
+		<!--limitTo, который ограничивает вывод определенным количеством объектов-->
+		<div ng-repeat="answer in question.answers | orderBy: sortparam | limitTo: 2" class="answer">
+			<div class="vote">
+				<a class="vote-up" ng-click="voteUp(answer)"></a>
+				<span class="rate">{{answer.rate}}</span>
+				<a class="vote-down" ng-click="voteDown(answer)"></a>
+			</div>
+			<b>{{answer.text}}</b>
+			<p>{{answer.author}}</p>
+			<p><i>{{answer.date}}</i></p>
+		</div>
+		<hr/>
+		<!--filter задает параметры и значения фильтрации, например, по какому свойству $scope проводить фильтрацию-->
+		<!--Здесь в текущем скоупе, после выбора #select, образуется объект newAnswer со свойством author,-->
+		<!--которое получает значение answer.author. И фильтрация происходит путем сравнения объектов из массива question.answers-->
+		<!--и объекта newAnswer: вывод значения происходит если будет обнаружено хотябы одно одинаковое свойство,-->
+		<!--значение которого будет совпадать (неуверен: или значение которого будет содержаться в сравниваемом)-->
+		<div>
+			<select id="select" ng-model="newAnswer.author">
+				<option ng-repeat="answer in question.answers" >{{answer.author}}</option>
+			</select>
+			<select>
+				<option ng-repeat="selected_answer in question.answers | filter: newAnswer">{{selected_answer.date}}</option>
+			</select>
+		</div>
+		<hr/>
+
+		<div class="quest">
+			<h3>{{question.text}}</h3>
+			<p>{{question.author}} </p>
+			<p><i>{{question.date}}</i></p>
+		</div>
+		<!--ng-init - Значение модели по умолчанию-->
+		<p>Введите ответчика: <input type="text" ng-model="member" ng-init="member='и'"/></p>
+		<h3>Ответы</h3>
+		<div class="answers">
+			<!--Здесь будет выводиться только тот объект, -->
+			<!--у которого свойства author и text содержат символы из текущего $scope.member-->
+			<div ng-repeat="a in question.answers | filter: {author: member, text: member}" class="answer" >
+				<div class="vote">
+					<a class="vote-up" ng-click="voteUp(a)"></a>
+					<span class="rate">{{a.rate}}</span>
+					<a class="vote-down" ng-click="voteDown(a)"></a>
+				</div>
+				<b>{{a.text}}</b>
+				<p>{{a.author}}</p>
+				<p><i>{{a.date}}</i></p>
+			</div>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="customFilterController">
+		<!--Реализация кастомного фильтра-->
+		<div class="quest">
+			<h3>{{question.text}}</h3>
+			<p>{{question.author}}</p>
+			<p><i>{{question.date}}</i></p>
+		</div>
+		<h3>Ответы</h3>
+		<div class="answers">
+			<div ng-repeat="answer in question.answers" class="answer">
+				<div class="vote">
+					<a class="vote-up" ng-click="voteUp(answer)"></a>
+					<span class="rate">{{answer.rate}}</span>
+					<a class="vote-down" ng-click="voteDown(answer)"></a>
+				</div>
+				<!--проверка answer.text на наличие слова 'фигасе':-->
+				<b>{{answer.text | formatText}}</b>
+				<p>{{answer.author}}</p>
+				<p><i>{{answer.date}}</i></p>
+			</div>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="validationController">
+		<form name="answerForm">
+			<fieldset>
+				<p>
+					<label>
+						Текст ответа
+						<input id="answerText" ng-model="answer.text" required placeholder="Введите ответ" />
+					</label>
+				</p>
+				<p>
+					<label>
+						Автор ответа
+						<input id="answerAuthor" ng-model="answer.author" required placeholder="Введите автора" />
+					</label>
+				</p>
+				<p>
+					<label>
+						Дата ответа
+						<!--Директива ng-pattern принимает регулярное выражение, которому должен соответствовать -->
+						<!--вводимое значение. То есть в данном случае регулярное выражение соответствует, например, выражению 12/11/2013.-->
+						<input id="answerDate" ng-model="answer.date" required  ng-pattern="/\d\d/\d\d/\d\d\d\d/" placeholder="dd/mm/yyyy" />
+					</label>
+				</p>
+			</fieldset>
+			<!--ng-click="save(answer, answerForm)", которое вызывает функцию save контроллера AnswerController,-->
+			<!--передавая в нее в качестве параметров объект answer, создаваемый, полями формы, -->
+			<!--и объект формы answerForm (так как у элемента form атрибут name="answerForm")-->
+			<button type="submit" ng-click="save(answer, answerForm)">Сохранить</button>
+		</form>
+	</div>
+
 </div>
+
+<script>
+	var scrollToDown = function() {
+		window.scrollTo(0,1000000);
+	};
+	setTimeout(scrollToDown, 200);
+</script>
 </body>
 </html>
