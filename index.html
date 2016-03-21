@@ -9,6 +9,7 @@
 	<script src="ui/js/app.js"></script>
 	<script src="ui/js/controllers.js"></script>
 	<script src="ui/js/filters.js"></script>
+	<script src="ui/js/directives.js"></script>
 </head>
 <body>
 $rootScope.alert - {{alert}}
@@ -298,7 +299,7 @@ $rootScope.fromController = {{fromController}}
 			<!--$dirty The field has been modified-->
 			<!--$invalid The field content is not valid-->
 			<!--$valid The field content is valid-->
-			<fieldset ng-style="$valid ? {} : {background: 'red'}">
+			<fieldset ng-style="answerForm.$valid ? {} : {background: 'red'}">
 				<p>
 					<label>
 						Текст ответа
@@ -325,6 +326,79 @@ $rootScope.fromController = {{fromController}}
 			<!--и объект формы answerForm (так как у элемента form атрибут name="answerForm")-->
 			<button type="submit" ng-click="save(answer, answerForm)">Сохранить</button>
 		</form>
+	</div>
+
+	<h1>Работа со структурой DOM</h1>
+
+	<div ng-controller="customFilterController">
+		<h1>D O M</h1>
+		<!--Навигация по странице-->
+		<!--children(): возвращает набор дочерних элементов-->
+		<!--eq(index): возвращает элемент по определенному индексу из коллекции элементов-->
+		<!--find(tag): получает все элементы по определенному тегу-->
+		<!--next(): возвращает следующий сестринский элемент-->
+		<!--parent(): возвращает родительский элемент-->
+		<!--html(): возвращает html-код элемента-->
+		<!--text(): возвращает текстовое содержимое элемента-->
+		<div id="thisSelector" class="quest">
+			<h3>{{question.text}}</h3>
+			<p>{{question.author}} </p> <p><i>{{question.date}}</i></p>
+		</div>
+		<!--Манипуляция элементами-->
+		<!--addClass(name): добавляет к элементу класс-->
+		<!--attr(name) / attr(name, value): получает значение value атрибута name элемента и устанавливает его-->
+		<!--css(name) / css(name, value): получает значение value стиля name у элемента и устанавливает его-->
+		<!--hasClass(name): возвращает true, если элемент имеет класс name-->
+		<!--prop(name) / prop(name, value): получает значение value свойстваа name элемента и устанавливает его-->
+		<!--removeAttr(name): удаляет у элемента атрибут-->
+		<!--removeClass(name): удаляет у элемента класс-->
+		<!--text(value): устанавливает текстовое значение у элемента-->
+		<!--toggleClass(name): переключает класс - класс name добавляется, а все ранее имевшиеся классы удаляются-->
+		<!--val() / val(value): получает значение атрибута value и устанавливает его значение-->
+
+		<!--Создание и удаление элементов-->
+		<!--angular.element(html): создает определенный элемент с кодом html-->
+		<!--after(elements): добавляет элементы elements после элемента, на котором вызывается данный метод-->
+		<!--append(elements): добавляет элементы elements в качестве дочерних в конец элемента, на котором вызывается данный метод-->
+		<!--clone(): создает копию элемента, для которого вызывается метод-->
+		<!--prepend(elements): добавляет элементы elements в качестве дочерних в начало элемента, на котором вызывается данный метод-->
+		<!--remove(): удаляет элемент-->
+		<!--replaceWith(element): заменяет элемент, на котором вызывается метод, другим элементом, который передается в качестве параметра-->
+		<!--wrap(element): обертывает элемент, на котором вызывается метод, новым элементом, передающимся в качестве параметра-->
+
+		<!--Регистрация событий-->
+		<!--jqLite поддерживает регистрацию стандартных событий javascript. Для этого определены методы:-->
+		<!--on(events, handler): регистрирует обработчик для одного или нескольких событий-->
+		<!--off(events, handler): удаляет ранее зарегистрированный обработчик для нескольких событий-->
+		<!--triggerHandler(event): вызывает обработчики для события-->
+
+		<textarea id="consoleLog"></textarea>
+
+		<script>
+			var consoleLog = angular.element(document.querySelector('#consoleLog'));
+			// получаем элемент с #thisSelector
+			var thisSelector = angular.element(document.querySelector("#thisSelector"));
+			// получаем его дочерний элемент h3
+			var h3 = thisSelector.find('h3');
+			// получаем элемент body
+			var body = angular.element(document.querySelectorAll("body")[0]);
+			// выводим результаты
+			var result = h3.text() + body.text().replace(/{{/g,"{").replace(/}}/g,"}");
+
+			consoleLog.text(result);
+		</script>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="customFilterController">
+		<h1>Custom directive answer-list</h1>
+		<div class="quest">
+			<h3>{{question.text}}</h3>
+			<p>{{question.author}} </p> <p><i>{{question.date}}</i></p>
+		</div>
+		<h3>Ответы</h3>
+		<div answer-list="question"></div>
 	</div>
 
 </div>
