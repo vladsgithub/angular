@@ -10,26 +10,32 @@
 	<script src="ui/js/controllers.js"></script>
 	<script src="ui/js/filters.js"></script>
 	<script src="ui/js/directives.js"></script>
+	<script src="ui/js/services.js"></script>
 </head>
-<body>
+<!--ng-cloak - спрятать исходний код теплейтов при старте-->
+<body ng-cloak>
 $rootScope.alert - {{alert}}
 <br/>
 $rootScope.fromController = {{fromController}}
 
 <div ng-controller="parentController">
 	<p>Сообщение: {{message}}</p>
+
 	<div ng-controller="phoneController">
+		<h1>Стандартное использование контроллера</h1>
 		<p>Название: {{phone.name}}</p>
 		<p>Цена: {{phone.price}} $</p>
 		<p>Производитель: {{phone.company.name}}</p>
 		<p>Сообщение: {{message}}</p>
 	</div>
+
 	<div ng-controller="phoneController as phoneCtrl">
 		<!-- Using 'as phoneCtrl' is necessary to get a value of 'phoneCtrl.text' -->
+		<h1>Использование директивы ngRepeat</h1>
 		<input type="text" ng-model="phone.name" />
 		<p>Название: {{phone.name}}</p>
 		<p>Цена: {{phone.price}} $</p>
-		<p>Text: {{phoneCtrl.text}}</p>
+		<p>Text: {{phoneCtrl.text}}</p> <!-- Можно и так получить свойство из скоупа, через ng-controller="phoneController as phoneCtrl" -->
 		<ul>
 			<li ng-repeat="item in items" ng-class="$odd ? 'odd' : 'even'">{{$index}}) item = {{item}}</li>
 			<!--$index: возвращает индекс элемента в массиве-->
@@ -40,7 +46,9 @@ $rootScope.fromController = {{fromController}}
 			<!--$odd: возвращает true, если элемент является нечетным-->
 		</ul>
 	</div>
+
 	<div ng-controller="bindController">
+		<h1>Привязка данных в AngularJS</h1>
 		<!--Привязка данных в AngularJS-->
 		<!--ng-bind: осуществляет одностороннюю привязку к свойству innerText html-элемента-->
 		<!--ng-model: создает двустороннюю привязку-->
@@ -75,6 +83,7 @@ $rootScope.fromController = {{fromController}}
 	</div>
 
 	<div ng-controller="modeController">
+		<h1>Динамическая загрузка представлений через ng-include</h1>
 		<!--Динамическая загрузка представлений через ng-include-->
 		<div ng-repeat="button in modes">
 			<label>
@@ -88,6 +97,7 @@ $rootScope.fromController = {{fromController}}
 	<hr/>
 
 	<div ng-controller="modeController">
+		<h1>Использование директивы ngSwitch</h1>
 		<!--ng-switch  - иногда рациональнее будет определить фрагменты кода html сразу же на главной странице и -->
 		<!--отображать их в зависимости от условий-->
 		<div ng-repeat="button in modes">
@@ -124,6 +134,7 @@ $rootScope.fromController = {{fromController}}
 	<hr/>
 
 	<div ng-controller="styleController">
+		<h1>Стилизация элементов через ng-class и ng-style</h1>
 		<!--ng-class и ng-style-->
 		<!--Данные директивы служат стилизации элементов.-->
 		<div ng-style="somestyle">Директива ng-style</div>
@@ -147,6 +158,7 @@ $rootScope.fromController = {{fromController}}
 	<hr/>
 
 	<div ng-controller="questionController">
+		<h1>Группа директив связана с обработкой пользовательских событий. Рассмотрим директиву ng-click</h1>
 		<!--ng-click-->
 		<!--Отдельная группа директив связана с обработкой пользовательских событий. Рассмотрим директиву ng-click,-->
 		<!--которая фактически будет эквивалентна обработке события onclick в javascript-->
@@ -192,6 +204,7 @@ $rootScope.fromController = {{fromController}}
 	<hr/>
 
 	<div ng-controller="questionController">
+		<h1>Фильтры</h1>
 		<!--Фильтры-->
 		<!--lowercase и uppercase, так мы можем приводить содержимое к нижнему и верхнему регистру соответственно. -->
 		<h3>{{question.text | uppercase}}</h3>
@@ -259,6 +272,7 @@ $rootScope.fromController = {{fromController}}
 	<hr/>
 
 	<div ng-controller="customFilterController">
+		<h1>Реализация кастомного фильтра</h1>
 		<!--Реализация кастомного фильтра-->
 		<div class="quest">
 			<h3>{{question.text}}</h3>
@@ -284,6 +298,7 @@ $rootScope.fromController = {{fromController}}
 	<hr/>
 
 	<div ng-controller="validationController">
+		<h1>Валидация</h1>
 		<form name="answerForm">
 			<!--Forms have the following states:-->
 			<!--$pristine No fields have been modified yet-->
@@ -328,10 +343,10 @@ $rootScope.fromController = {{fromController}}
 		</form>
 	</div>
 
-	<h1>Работа со структурой DOM</h1>
+	<hr/>
 
 	<div ng-controller="customFilterController">
-		<h1>D O M</h1>
+		<h1>Работа со структурой D O M</h1>
 		<!--Навигация по странице-->
 		<!--children(): возвращает набор дочерних элементов-->
 		<!--eq(index): возвращает элемент по определенному индексу из коллекции элементов-->
@@ -401,8 +416,94 @@ $rootScope.fromController = {{fromController}}
 		<div answer-list="question"></div>
 	</div>
 
+	<div ng-controller="customFilterController">
+		<h1>Custom directive answer-list with parameters</h1>
+		<h3>Ответы:_____________</h3>
+		<answer-list-param source="question" />
+	</div>
+
+	<div ng-controller="customFilterController">
+		<h1>Шаблоны директив</h1>
+
+		<hr/>
+		<h1>answer-list-template:</h1>
+		<div answer-list-template="question"></div>
+
+		<hr/>
+		<h1>answer-list-URL-template:</h1>
+		<div answer-list-url-template="question">
+			<h1>This text is not visible without the property 'transclude'</h1>
+		</div>
+
+		<hr/>
+		<h1>answer-list-URL-template:</h1>
+		<div answer-list-transclude="question">
+			<h1>With the property 'transclude'</h1>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div ng-controller="customFilterController">
+		<h1>Обработка выражений в директивах AngularJS (используем сервис $compile)</h1>
+		<div answer-list-compile="question"></div>
+	</div>
+
+	<hr/>
+
+	<h1>Использование сервисов</h1>
+	<div ng-controller="dataServiceController">
+		<!-- обычно сервисы что-то предоставляют: данные, возможности ... -->
+
+		<h1>Через Factory</h1>
+		<div class="quest">
+			<h3>{{question.text}}</h3>
+			<p>{{question.author}} </p> <p><i>{{question.date}}</i></p>
+		</div>
+		<h3>Ответы</h3>
+		<div class="answers">
+			<div ng-repeat="answer in question.answers | orderBy:sortparam" class="answer">
+				<div class="vote">
+					<a class="vote-up" ng-click="voteUp(answer)"></a>
+					<span class="rate">{{answer.rate}}</span>
+					<a class="vote-down" ng-click="voteDown(answer)"></a>
+				</div>
+				<b>{{answer.text}}</b>
+				<p>{{answer.author}}</p>
+				<p><i>{{answer.date}}</i></p>
+			</div>
+		</div>
+	</div>
+
+	<div ng-controller="moduleServiceController">
+		<h1>Через Module.service</h1>
+		<div class="quest">
+			<h3>{{question.text}}</h3>
+			<p>{{question.author}} </p> <p><i>{{question.date}}</i></p>
+		</div>
+		<h3>Ответы</h3>
+		<div class="answers">
+			<div ng-repeat="answer in question.answers | orderBy:sortparam" class="answer">
+				<div class="vote">
+					<a class="vote-up" ng-click="voteUp(answer)"></a>
+					<span class="rate">{{answer.rate}}</span>
+					<a class="vote-down" ng-click="voteDown(answer)"></a>
+				</div>
+				<b>{{answer.text}}</b>
+				<p>{{answer.author}}</p>
+				<p><i>{{answer.date}}</i></p>
+			</div>
+		</div>
+	</div>
 </div>
 
+
+<p>
+	DI, ngMock — ваши лучшие помощники в тестировании. Также есть несколько инструментов, способных вас перенести на следующий уровень.
+</p>
+<p>
+	Карма + Жасмин
+</p>
 <script>
 	var scrollToDown = function() {
 		window.scrollTo(0,1000000);
