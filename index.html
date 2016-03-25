@@ -495,8 +495,50 @@ $rootScope.fromController = {{fromController}}
 			</div>
 		</div>
 	</div>
-</div>
 
+	<hr/>
+
+	<div class="dom-service" ng-controller="domServiceController">
+		<h1>Cервисы для работы с DOM</h1>
+		<button ng-click="getAlert('Hell to World')">Не нажимай</button>
+		<button id="angButton">Жми</button>
+	</div>
+
+	<div class="htmlcode" ng-controller="sanitizeController">
+		<h1>Потенциально опасные данные</h1>
+		<textarea ng-model="htmlcode"></textarea>
+		<span>Без сервисов $sce и $sanitize</span>
+		<p ng-bind-html="htmlcode"></p>
+		<span>С применением $sanitize</span>
+		<p ng-bind-html="htmlcodeSanitize"></p>
+		<span>С применением $sce</span>
+		<p ng-bind-html="htmlcodeSce"></p>
+	</div>
+
+	<div  ng-controller="httpController">
+		<button ng-click="load()">Загрузить</button>
+		<div class="content" ng-show="loaded">
+			<div class="quest">
+				<h3>{{question.text}}</h3>
+				<p>{{question.author}} </p> <p><i>{{question.date}}</i></p>
+			</div>
+			<h3>Ответы</h3>
+			<div class="answers">
+				<div ng-repeat="answer in question.answers | orderBy:sortparam" class="answer">
+					<div class="vote">
+						<a class="vote-up" ng-click="voteUp(answer)"></a>
+						<span class="rate">{{answer.rate}}</span>
+						<a class="vote-down" ng-click="voteDown(answer)"></a>
+					</div>
+					<b>{{answer.text}}</b>
+					<p>{{answer.author}}</p>
+					<p><i>{{answer.date}}</i></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
 
 <p>
 	DI, ngMock — ваши лучшие помощники в тестировании. Также есть несколько инструментов, способных вас перенести на следующий уровень.

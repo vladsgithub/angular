@@ -219,7 +219,7 @@ myApp.controller('dataServiceController', ['$scope', 'dataService', function($sc
 	};
 }]);
 
-myApp.controller('moduleServiceController', ['$scope', 'questionService', function ($scope, questionService){
+myApp.controller('moduleServiceController', ['$scope', 'questionService', function ($scope, questionService) {
 	$scope.question = questionService.question;
 
 	$scope.voteUp = function (answer){
@@ -229,3 +229,98 @@ myApp.controller('moduleServiceController', ['$scope', 'questionService', functi
 		answer.rate--;
 	};
 }]);
+
+myApp.controller("domServiceController", ['$scope', '$window', '$document', function($scope, $window, $document) {
+	console.log('Title of this page (native):', document.title);
+	console.log('Title of this page (angular):', $document[0].title);
+	console.log('#angButton (from native)', document.querySelector('#angButton'));
+	console.log('#angButton (from angular)', angular.element(document.querySelector('#angButton'))[0] );
+	$scope.getAlert = function(text){
+		$window.alert(text);
+	};
+	$document.find("button").on("click", function(event) {
+		if (angular.element(event.target.parentElement).hasClass('dom-service')) {
+			$window.alert(event.target.innerText);
+		}
+	});
+}]);
+
+myApp.controller('sanitizeController', ['$scope', '$sanitize', '$sce', function($scope, $sanitize, $sce) {
+	$scope.htmlcode='<div style="background: red;">Жми <a href="javascript:;" onclick="alert(0);">тут</a></div>';
+
+	//в этих описаниях остаются вопросы!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!????????????????????????????????????
+	//$sce: удаляет потенциально опасные элементы и атрибуты из кода html
+	//$sanitize: заменяет потенциально опасные символы эскейп-последовательностями
+
+	//Чтобы динамически отслеживать все изменения модели, применяется сервис $scope.$watch,
+	//который в качестве первого параметра принимает название модели, а в качестве второго - функцию, в которую передается новое значение.
+	$scope.$watch("htmlcode", function (newValue) {
+		$scope.htmlcode = newValue;
+		$scope.htmlcodeSanitize = $sanitize(newValue);
+		//Метод $sce.trustAsHtml() рассматривает кусок текста как html. Хотя он и кодирует теги,
+		//	но если мы введем код с javascript, то js-код будет действовать
+		$scope.htmlcodeSce = $sce.trustAsHtml(newValue);
+	});
+}]);
+
+myApp.controller('httpController', ['$scope', '$http', function($scope, $http) {
+	$scope.loaded = false;
+
+	$scope.load = function (){
+		//Сервис $http представляет ключевой сервис Angular, предназначенный для взаимодействия
+		// с удаленным HTTP-сервером через объект XMLHttpRequest или через JSONP.
+		$http.get('json/question.json').success(function(data) {
+			$scope.question = data.question;
+			$scope.loaded = true;
+		});
+	};
+	$scope.voteUp = function (answer){
+		answer.rate++;
+	};
+	$scope.voteDown = function (answer){
+		answer.rate--;
+	};
+}]);
+
+//
+//How long is your journey to work?
+//	How do you travel to work?
+//	What was your longest train journey?
+//	Who usually makes travel arrangements?
+//	Do you usually go on a sightseeing trip?
+//	A trip
+//The taxi driver took me the long way to the airport
+//I got to the check-in desk ten minutes before take-off
+//Fortunately the plane was late
+//I had to pay an excess baggage charge
+//I could only get an aisle seat
+//I had to wear my seat belt all through the trip
+//I waited three hours in the airport for another flight
+//At last
+//I had to take a single room
+//I could not find a waiter to serve me
+//I went back to my room and tried room service
+//I asked for my bill
+//I don't need to tell you: they had got it wrong!
+//At least at first sight
+//A sight
+//To go sightseeing
+//Before leaving
+//Long queues
+//Always have cash to tip hotel porters
+//At least 90 minutes before your flight leaves
+//No seat numbers are allocated
+//For an extra charge you can reserve a window seat
+//Can you figure out the missing words
+//I go to the business class lounge for some free food
+//Yes, so do I
+//	Some charge you extra for your bags
+//While I waited in the departure lounge
+//The woman at the check-in desk asked where I wanted to sit
+//I prefer a window seat so I can look at the view
+//They didn't allow me to get on the plane
+//I lost my boarding pass
+//When she went through the metal detector, the alarm sounded
+//At passport control the official looked at my photograph for five minutes
+//Things can fall out of the overhead locker onto your head
+//I missed my connection because of a delayed flight

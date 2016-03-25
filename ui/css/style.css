@@ -173,3 +173,13 @@ h1 {
   background: green;
   cursor: pointer;
 }
+.htmlcode textarea {
+  margin-bottom: 10px;
+  height: 100px;
+  width: 100%;
+}
+.htmlcode p {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid green;
+}
